@@ -117,7 +117,7 @@ To switch from fake data to real data: just replace `loan_data.csv` with the Kag
 * [Flask](https://flask.palletsprojects.com/) - web app framework
 ## Authors
  
-* **Thanh Ngo** - [thanhngnho](https://github.com/thanhngnho)
+* **Thanh Ho** - [thanhngnho](https://github.com/thanhngnho)
 ## Acknowledgments
  
 * Lending Club dataset from Kaggle — [wordsforthewise/lending-club](https://www.kaggle.com/datasets/wordsforthewise/lending-club)
