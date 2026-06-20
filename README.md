@@ -68,7 +68,7 @@ This trains the Random Forest, handles class imbalance with SMOTE, and saves the
 python app.py
 ```
  
-Then open `http://localhost:5000` in your browser. You'll see a form where you can enter borrower details and get a predicted default risk score.
+Then open `http://localhost:5000` in your browser. You'll see a form where you can enter borrower details and get a predicted default risk score. (see the how to use app section)
  
 You should see something like this in the terminal after Step 2:
  
@@ -82,7 +82,7 @@ what mattered most:
   loan grade     — G borrowers default way more than A borrowers
   DTI ratio      — more debt relative to income = more defaults
 ```
- 
+
 ## Running the Tests
  
 ### Model performance
@@ -107,6 +107,29 @@ The Flask app runs locally out of the box. To deploy it publicly you can use:
 * [Railway](https://railway.app) — also free, very beginner friendly
 * [Heroku](https://heroku.com) — classic option
 To switch from fake data to real data: just replace `loan_data.csv` with the Kaggle file and re-run `analysis.py`. No code changes needed.
+
+## How to Use the App
+
+Once you have the model trained and Flask running (`python app.py`), open your browser and go to: http://localhost:5000 or the link that directly in the terminal
+
+You'll see a form that looks like this:
+
+1. **Fill in the borrower details** — loan amount, FICO score, DTI ratio, loan grade, etc.
+
+2. **Click "Calculate Default Risk →"**
+
+3. **Get a risk score back** — the model returns a % chance of default with a color coded label:
+   - (Green) **Low Risk** — below 15% chance of defaulting
+   - (Yellow) **Medium Risk** — between 15% and 30%
+   - (Red) **High Risk** — above 30%
+
+**Example — safe borrower:**
+- FICO 750, Grade A, DTI 10%, 10 years employed → Low Risk
+
+**Example — risky borrower:**
+- FICO 620, Grade F, DTI 40%, 0 years employed → High Risk
+
+The score updates every time you click the button so you can try different combinations and see how each factor affects the risk score.
 
 ## What I Found
 
