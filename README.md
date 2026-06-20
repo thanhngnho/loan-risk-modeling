@@ -137,8 +137,6 @@ Trained a Random Forest on 270,000 simulated loan records. Here's what the model
 **Interesting finding:**
 The model is really good at identifying safe loans (97% recall) but struggles to catch defaults (only 8% recall). This is the classic class imbalance problem in finance. defaults are rare so the model leans toward predicting "paid off." SMOTE helped but didn't fully fix it — real world solution would be adjusting the decision threshold or collecting more default examples.
 
-<img width="363" height="164" alt="Screenshot 2026-06-20 at 1 23 15 PM" src="https://github.com/user-attachments/assets/df0fb4d5-49f8-4625-b0ab-28b4a45f4e7a" />
-
  
 ## Built With
  
