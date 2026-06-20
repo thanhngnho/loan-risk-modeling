@@ -2,7 +2,7 @@
  
 So I was looking at around in the bank while waiting for my parents and I was like — predicting whether a borrower will default on their loan. It's literally what banks do every time someone applies for a loan, so I figured why not build it myself. Got the data from Kaggle (real Lending Club loan records) and built a Random Forest model that predicts default risk based on things like FICO score, DTI ratio, and loan grade.
  
-The cool part is I also deployed it as a Flask web app where you can type in borrower details and get a live risk score back.
+The cool part is that this project also deployed as a Flask web app where you can type in borrower details and get a live risk score back.
  
 ## Getting Started
  
