@@ -107,6 +107,38 @@ The Flask app runs locally out of the box. To deploy it publicly you can use:
 * [Railway](https://railway.app) — also free, very beginner friendly
 * [Heroku](https://heroku.com) — classic option
 To switch from fake data to real data: just replace `loan_data.csv` with the Kaggle file and re-run `analysis.py`. No code changes needed.
+
+## What I Found
+
+Trained a Random Forest on 270,000 simulated loan records. Here's what the model learned:
+
+**Numbers:**
+- Total loans: 270,000
+- Default rate: 15.7% (most people pay off their loans)
+- ROC-AUC: 0.716 on test data (0.5 = random guessing, 1.0 = perfect)
+- Trained on 202,500 rows, tested on 67,500 rows it never saw
+- After SMOTE: 256,099 training rows (balanced the default/paid off ratio)
+  
+<img width="363" height="164" alt="Screenshot 2026-06-20 at 1 23 15 PM" src="https://github.com/user-attachments/assets/d595d7f5-9a35-4971-ac3c-c820e001354e" />
+
+**Model accuracy breakdown:**
+- Overall accuracy: 83%
+- Paid off loans: precision 0.85, recall 0.97 (model is great at spotting safe loans)
+- Defaulted loans: precision 0.35, recall 0.08 (harder to catch — defaults are rare)
+
+<img width="428" height="188" alt="Screenshot 2026-06-20 at 1 23 21 PM" src="https://github.com/user-attachments/assets/b208de15-0346-41be-9639-1010a59cb4e1" />
+
+**What predicted default the most:**
+- FICO score — higher score = less likely to default
+- Interest rate — higher rate = more likely to default  
+- Loan grade — G borrowers default way more than A borrowers
+- DTI ratio — more debt relative to income = more defaults
+
+**Interesting finding:**
+The model is really good at identifying safe loans (97% recall) but struggles to catch defaults (only 8% recall). This is the classic class imbalance problem in finance. defaults are rare so the model leans toward predicting "paid off." SMOTE helped but didn't fully fix it — real world solution would be adjusting the decision threshold or collecting more default examples.
+
+<img width="363" height="164" alt="Screenshot 2026-06-20 at 1 23 15 PM" src="https://github.com/user-attachments/assets/df0fb4d5-49f8-4625-b0ab-28b4a45f4e7a" />
+
  
 ## Built With
  
