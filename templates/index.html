@@ -1,0 +1,350 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loan Default Risk Predictor</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+ 
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0F1117;
+            color: #E8E9F0;
+            min-height: 100vh;
+        }
+ 
+        .page {
+            max-width: 780px;
+            margin: 0 auto;
+            padding: 48px 24px 80px;
+        }
+ 
+        /* header */
+        .header {
+            margin-bottom: 40px;
+        }
+ 
+        .badge {
+            display: inline-block;
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+            color: #6C8EF5;
+            background: rgba(108, 142, 245, 0.12);
+            border: 1px solid rgba(108, 142, 245, 0.25);
+            padding: 4px 10px;
+            border-radius: 20px;
+            margin-bottom: 14px;
+        }
+ 
+        h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 32px;
+            font-weight: 700;
+            line-height: 1.2;
+            color: #fff;
+            margin-bottom: 8px;
+        }
+ 
+        .subtitle {
+            font-size: 15px;
+            color: #7A7F9A;
+            line-height: 1.5;
+        }
+ 
+        /* form card */
+        .card {
+            background: #181B26;
+            border: 1px solid #252836;
+            border-radius: 16px;
+            padding: 28px;
+            margin-bottom: 20px;
+        }
+ 
+        .card-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 13px;
+            font-weight: 500;
+            letter-spacing: .06em;
+            text-transform: uppercase;
+            color: #4A5070;
+            margin-bottom: 20px;
+        }
+ 
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+ 
+        .field { display: flex; flex-direction: column; gap: 6px; }
+        .field.wide { grid-column: span 2; }
+ 
+        label {
+            font-size: 12px;
+            font-weight: 500;
+            color: #6B7090;
+            letter-spacing: .02em;
+        }
+ 
+        input, select {
+            background: #0F1117;
+            border: 1px solid #252836;
+            border-radius: 8px;
+            padding: 10px 12px;
+            font-size: 14px;
+            color: #E8E9F0;
+            font-family: 'Inter', sans-serif;
+            transition: border-color .15s;
+            width: 100%;
+        }
+ 
+        input:focus, select:focus {
+            outline: none;
+            border-color: #6C8EF5;
+        }
+ 
+        select option { background: #181B26; }
+ 
+        button {
+            width: 100%;
+            margin-top: 20px;
+            padding: 13px;
+            background: #6C8EF5;
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 600;
+            font-family: 'Space Grotesk', sans-serif;
+            cursor: pointer;
+            transition: background .15s, transform .1s;
+        }
+ 
+        button:hover { background: #5A7EE8; }
+        button:active { transform: scale(0.99); }
+ 
+        /* result */
+        .result {
+            display: none;
+            background: #181B26;
+            border: 1px solid #252836;
+            border-radius: 16px;
+            padding: 36px 28px;
+            text-align: center;
+            animation: fadeIn .3s ease;
+        }
+ 
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+ 
+        .score-ring {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 34px;
+            font-weight: 700;
+            border: 3px solid currentColor;
+        }
+ 
+        .risk-label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+ 
+        .risk-sub {
+            font-size: 13px;
+            color: #4A5070;
+        }
+ 
+        /* gauge bar */
+        .gauge-wrap {
+            margin: 20px auto 0;
+            max-width: 340px;
+        }
+ 
+        .gauge-track {
+            height: 6px;
+            background: #252836;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 6px;
+        }
+ 
+        .gauge-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width .6s cubic-bezier(.4,0,.2,1);
+        }
+ 
+        .gauge-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            color: #4A5070;
+        }
+ 
+        @media (max-width: 500px) {
+            .grid { grid-template-columns: 1fr; }
+            .field.wide { grid-column: span 1; }
+            h1 { font-size: 24px; }
+        }
+    </style>
+</head>
+<body>
+<div class="page">
+ 
+    <div class="header">
+        <h1>Loan Default Risk Predictor</h1>
+        <p class="subtitle">Enter borrower details to get a predicted probability of default. This is powered by a model trained on 270K+ Lending Club records (Kraggle).</p>
+    </div>
+ 
+    <div class="card">
+        <div class="card-title">Borrower Profile</div>
+        <div class="grid">
+            <div class="field">
+                <label>Loan Amount ($)</label>
+                <input type="number" id="loan_amnt" value="15000">
+            </div>
+            <div class="field">
+                <label>Interest Rate (%)</label>
+                <input type="number" id="int_rate" step="0.01" value="12.5">
+            </div>
+            <div class="field">
+                <label>Loan Grade</label>
+                <select id="grade">
+                    <option>A</option><option>B</option><option selected>C</option>
+                    <option>D</option><option>E</option><option>F</option><option>G</option>
+                </select>
+            </div>
+            <div class="field">
+                <label>FICO Score</label>
+                <input type="number" id="fico_range_low" value="700">
+            </div>
+            <div class="field">
+                <label>Annual Income ($)</label>
+                <input type="number" id="annual_inc" value="65000">
+            </div>
+            <div class="field">
+                <label>DTI Ratio (%)</label>
+                <input type="number" id="dti" step="0.1" value="18">
+            </div>
+            <div class="field">
+                <label>Employment Length (years)</label>
+                <input type="number" id="emp_length" value="5">
+            </div>
+            <div class="field">
+                <label>Home Ownership</label>
+                <select id="home_ownership">
+                    <option>RENT</option><option>MORTGAGE</option>
+                    <option>OWN</option><option>OTHER</option>
+                </select>
+            </div>
+            <div class="field">
+                <label>Loan Purpose</label>
+                <select id="purpose">
+                    <option value="debt_consolidation">Debt Consolidation</option>
+                    <option value="credit_card">Credit Card</option>
+                    <option value="home_improvement">Home Improvement</option>
+                    <option value="major_purchase">Major Purchase</option>
+                    <option value="medical">Medical</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+            <div class="field">
+                <label>Public Records</label>
+                <input type="number" id="pub_rec" value="0">
+            </div>
+            <div class="field wide">
+                <label>Revolving Credit Utilization (%)</label>
+                <input type="number" id="revol_util" step="0.1" value="45">
+            </div>
+        </div>
+        <button onclick="predict()">Calculate Default Risk →</button>
+    </div>
+ 
+    <div class="result" id="result">
+        <div class="score-ring" id="score-ring">
+            <span id="score-text">—</span>
+        </div>
+        <div class="risk-label" id="label-text">—</div>
+        <div class="risk-sub">predicted probability of default</div>
+        <div class="gauge-wrap">
+            <div class="gauge-track">
+                <div class="gauge-fill" id="gauge-fill" style="width:0%"></div>
+            </div>
+            <div class="gauge-labels"><span>Low</span><span>Medium</span><span>High</span></div>
+        </div>
+    </div>
+ 
+</div>
+ 
+<script>
+async function predict() {
+    const btn = document.querySelector("button");
+    btn.textContent = "Calculating...";
+    btn.disabled = true;
+ 
+    const data = {
+        loan_amnt:      document.getElementById("loan_amnt").value,
+        int_rate:       document.getElementById("int_rate").value,
+        grade:          document.getElementById("grade").value,
+        fico_range_low: document.getElementById("fico_range_low").value,
+        annual_inc:     document.getElementById("annual_inc").value,
+        dti:            document.getElementById("dti").value,
+        emp_length:     document.getElementById("emp_length").value,
+        home_ownership: document.getElementById("home_ownership").value,
+        purpose:        document.getElementById("purpose").value,
+        pub_rec:        document.getElementById("pub_rec").value,
+        revol_util:     document.getElementById("revol_util").value,
+    };
+ 
+    try {
+        const res  = await fetch("/predict", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data)
+        });
+        const json = await res.json();
+ 
+        const resultDiv = document.getElementById("result");
+        resultDiv.style.display = "block";
+        resultDiv.scrollIntoView({ behavior: "smooth", block: "nearest" });
+ 
+        const ring = document.getElementById("score-ring");
+        ring.style.color = json.color;
+        ring.style.borderColor = json.color + "55";
+        ring.style.background = json.color + "10";
+ 
+        document.getElementById("score-text").textContent  = json.risk_score + "%";
+        document.getElementById("label-text").textContent  = json.risk_label;
+        document.getElementById("label-text").style.color  = json.color;
+ 
+        const gauge = document.getElementById("gauge-fill");
+        gauge.style.background = json.color;
+        setTimeout(() => { gauge.style.width = json.risk_score + "%"; }, 50);
+ 
+    } catch(e) {
+        alert("Something went wrong: " + e.message);
+    }
+ 
+    btn.textContent = "Calculate Default Risk →";
+    btn.disabled = false;
+}
+</script>
+</body>
+</html>
+ 
